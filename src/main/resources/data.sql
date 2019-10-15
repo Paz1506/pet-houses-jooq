@@ -1,0 +1,1 @@
+insert into house(id, name, capacity, object_size, filled) values ('00000000-0000-0000-0000-000000000000', 'House1', 1, 'S', false);
