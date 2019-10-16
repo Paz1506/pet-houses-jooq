@@ -59,6 +59,9 @@ public class HouseRepositoryImpl implements HouseRepository {
                                                                         .optionalAnd(houseSearchArgument.getCapacityFrom(), house.CAPACITY::greaterOrEqual)
                                                                         .optionalAnd(houseSearchArgument.getCapacityTo(), house.CAPACITY::lessOrEqual)
                                                                         .build())
+                                            .orderBy(house.CAPACITY.desc()) // FIXME: remove hardcode
+                                            .limit(pageable.getPageSize())
+                                            .offset(new Long(pageable.getOffset()).intValue())
                                             .fetchInto(HouseRecord.class);
 
         return new PageImpl<>(houseRecords);

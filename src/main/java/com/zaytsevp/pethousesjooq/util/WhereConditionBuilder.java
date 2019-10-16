@@ -37,7 +37,7 @@ public class WhereConditionBuilder {
     }
 
     public WhereConditionBuilder optionalStringAnd(@Nullable String field, Function<String, Condition> doWhenValueExists) {
-        if (StringUtils.isEmpty(field)) {
+        if (!StringUtils.isEmpty(field)) {
             searchCondition = searchCondition.and(doWhenValueExists.apply(field));
         }
 
