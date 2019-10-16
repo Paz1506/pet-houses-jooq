@@ -7,6 +7,7 @@ import com.zaytsevp.pethousesjooq.repository.HouseRepository;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import com.zaytsevp.pethousesjooq.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +53,8 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<HouseRecord> getAll(HouseSearchArgument searchArgument) {
-        return houseRepository.getAll(searchArgument)
+    public List<HouseRecord> getAll(HouseSearchArgument searchArgument, Pageable pageable) {
+        return houseRepository.getAll(searchArgument, pageable)
                               .getContent();
     }
 }

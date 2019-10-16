@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ class HouseRepositoryImplIT {
                                                                 .build();
 
         // Act
-        Page<HouseRecord> actualResultPage = houseRepository.getAll(searchArgument);
+        Page<HouseRecord> actualResultPage = houseRepository.getAll(searchArgument, PageRequest.of(1, 1));
 
         // Assert
         Assertions.assertThat(actualResultPage.getTotalElements()).isEqualTo(1);
