@@ -4,11 +4,13 @@ import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.exceptions.RecordNotFoundException;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
 import com.zaytsevp.pethousesjooq.repository.HouseRepository;
+import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import com.zaytsevp.pethousesjooq.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +24,7 @@ public class HouseServiceImpl implements HouseService {
     @Autowired
     public HouseServiceImpl(HouseRepository houseRepository) {this.houseRepository = houseRepository;}
 
+    // TODO: filled не задавать руками, а вычислять на основании capacity & количества питомцев в нем
     @Override
     @Transactional
     public HouseRecord create(Integer capacity, Boolean filled, String name, ObjectSize objectSize) {
@@ -45,5 +48,12 @@ public class HouseServiceImpl implements HouseService {
     @Transactional(readOnly = true)
     public HouseRecord getExistingById(String id) {
         return getById(id).orElseThrow(() -> new RecordNotFoundException("Record not found!"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<HouseRecord> getAll(HouseSearchArgument searchArgument) {
+        return houseRepository.getAll(searchArgument)
+                              .getContent();
     }
 }

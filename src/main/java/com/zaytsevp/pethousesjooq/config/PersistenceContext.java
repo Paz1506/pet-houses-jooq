@@ -27,8 +27,10 @@ import javax.sql.DataSource;
 @PropertySource("classpath:config.properties")
 public class PersistenceContext {
 
+    private final Environment environment;
+
     @Autowired
-    private Environment environment;
+    public PersistenceContext(Environment environment) {this.environment = environment;}
 
     @Bean
     public DataSource dataSource() {

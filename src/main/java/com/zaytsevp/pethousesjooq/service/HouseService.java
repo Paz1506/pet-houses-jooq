@@ -2,7 +2,9 @@ package com.zaytsevp.pethousesjooq.service;
 
 import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,4 +17,6 @@ public interface HouseService {
     Optional<HouseRecord> getById(String id);
 
     HouseRecord getExistingById(String id);
+
+    List<HouseRecord> getAll(HouseSearchArgument searchArgument);
 }

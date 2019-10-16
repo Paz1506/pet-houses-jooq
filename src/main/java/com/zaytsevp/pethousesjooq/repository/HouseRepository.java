@@ -1,6 +1,8 @@
 package com.zaytsevp.pethousesjooq.repository;
 
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.Optional;
@@ -14,4 +16,6 @@ public interface HouseRepository {
     HouseRecord create(int capacity, boolean filled, String name, String objectSize);
 
     Optional<HouseRecord> getById(String id);
+
+    Page<HouseRecord> getAll(HouseSearchArgument houseSearchArgument);
 }
