@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -76,10 +77,13 @@ class HouseRepositoryImplIT {
 
     @Test
     void getAllWithPageable() {
+        // Arrange
+        PageRequest pageRequest = PageRequest.of(1, 5, Sort.Direction.DESC, "CAPACITY");
+
         // Act
         Page<HouseRecord> actualResultPage = houseRepository.getAll(HouseSearchArgument.builder()
                                                                                        .build(),
-                                                                    PageRequest.of(1, 5));
+                                                                    pageRequest);
 
         // Assert
         Assertions.assertThat(actualResultPage.getTotalElements()).isEqualTo(5);
