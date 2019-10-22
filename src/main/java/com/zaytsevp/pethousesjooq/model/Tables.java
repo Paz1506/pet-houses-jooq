@@ -5,6 +5,7 @@ package com.zaytsevp.pethousesjooq.model;
 
 
 import com.zaytsevp.pethousesjooq.model.tables.House;
+import com.zaytsevp.pethousesjooq.model.tables.HouseKeeper;
 
 import javax.annotation.Generated;
 
@@ -26,4 +27,9 @@ public class Tables {
      * The table <code>public.house</code>.
      */
     public static final House HOUSE = com.zaytsevp.pethousesjooq.model.tables.House.HOUSE;
+
+    /**
+     * The table <code>public.house_keeper</code>.
+     */
+    public static final HouseKeeper HOUSE_KEEPER = com.zaytsevp.pethousesjooq.model.tables.HouseKeeper.HOUSE_KEEPER;
 }

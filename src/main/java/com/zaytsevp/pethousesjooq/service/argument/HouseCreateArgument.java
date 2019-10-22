@@ -1,6 +1,5 @@
 package com.zaytsevp.pethousesjooq.service.argument;
 
-import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +10,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class HouseSearchArgument {
-    private String id;
+public class HouseCreateArgument {
+    private Integer capacity;
 
     private Boolean filled;
 
-    private ObjectSize objectSize;
-
     private String name;
 
-    private Integer capacityFrom;
-
-    private Integer capacityTo;
+    private String objectSize;
 
     private String houseKeeperId;
 }

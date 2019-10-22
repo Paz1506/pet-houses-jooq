@@ -1,7 +1,9 @@
 package com.zaytsevp.pethousesjooq.repository;
 
+import com.zaytsevp.pethousesjooq.enums.EntityStatus;
 import com.zaytsevp.pethousesjooq.model.tables.House;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import com.zaytsevp.pethousesjooq.util.WhereConditionBuilder;
 import org.jooq.DSLContext;
@@ -32,13 +34,15 @@ public class HouseRepositoryImpl implements HouseRepository {
     public HouseRepositoryImpl(DSLContext dsl) {this.dsl = dsl;}
 
     @Override
-    public HouseRecord create(int capacity, boolean filled, String name, String objectSize) {
+    public HouseRecord create(HouseCreateArgument houseCreateArgument) {
         return dsl.insertInto(house)
                   .set(house.ID, UUID.randomUUID().toString())
-                  .set(house.CAPACITY, capacity)
-                  .set(house.FILLED, filled)
-                  .set(house.NAME, name)
-                  .set(house.OBJECT_SIZE, objectSize)
+                  .set(house.CAPACITY, houseCreateArgument.getCapacity())
+                  .set(house.FILLED, houseCreateArgument.getFilled())
+                  .set(house.NAME, houseCreateArgument.getName())
+                  .set(house.OBJECT_SIZE, houseCreateArgument.getObjectSize())
+                  .set(house.STATUS, EntityStatus.ACTIVE.name())
+                  .set(house.HOUSE_KEEPER_ID, houseCreateArgument.getHouseKeeperId())
                   .returning()
                   .fetchOne();
     }
@@ -58,6 +62,7 @@ public class HouseRepositoryImpl implements HouseRepository {
                                                                         .optionalStringAnd(houseSearchArgument.getName(), house.NAME::containsIgnoreCase)
                                                                         .optionalAnd(houseSearchArgument.getFilled(), house.FILLED::eq)
                                                                         .optionalStringAnd(houseSearchArgument.getId(), house.ID::eq)
+                                                                        .optionalStringAnd(houseSearchArgument.getHouseKeeperId(), house.HOUSE_KEEPER_ID::eq)
                                                                         .optionalEnumAnd(houseSearchArgument.getObjectSize(), house.OBJECT_SIZE::eq)
                                                                         .optionalAnd(houseSearchArgument.getCapacityFrom(), house.CAPACITY::greaterOrEqual)
                                                                         .optionalAnd(houseSearchArgument.getCapacityTo(), house.CAPACITY::lessOrEqual)

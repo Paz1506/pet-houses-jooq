@@ -5,6 +5,7 @@ package com.zaytsevp.pethousesjooq.model;
 
 
 import com.zaytsevp.pethousesjooq.model.tables.House;
+import com.zaytsevp.pethousesjooq.model.tables.HouseKeeper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 2100371617;
+    private static final long serialVersionUID = -1642184105;
 
     /**
      * The reference instance of <code>public</code>
@@ -41,6 +42,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.house</code>.
      */
     public final House HOUSE = com.zaytsevp.pethousesjooq.model.tables.House.HOUSE;
+
+    /**
+     * The table <code>public.house_keeper</code>.
+     */
+    public final HouseKeeper HOUSE_KEEPER = com.zaytsevp.pethousesjooq.model.tables.HouseKeeper.HOUSE_KEEPER;
 
     /**
      * No further instances allowed
@@ -67,6 +73,7 @@ public class Public extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
-            House.HOUSE);
+            House.HOUSE,
+            HouseKeeper.HOUSE_KEEPER);
     }
 }

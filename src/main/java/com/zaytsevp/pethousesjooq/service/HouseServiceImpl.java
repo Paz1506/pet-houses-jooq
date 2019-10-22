@@ -1,9 +1,9 @@
 package com.zaytsevp.pethousesjooq.service;
 
-import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.exceptions.RecordNotFoundException;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
 import com.zaytsevp.pethousesjooq.repository.HouseRepository;
+import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import com.zaytsevp.pethousesjooq.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,15 @@ public class HouseServiceImpl implements HouseService {
     // TODO: filled не задавать руками, а вычислять на основании capacity & количества питомцев в нем
     @Override
     @Transactional
-    public HouseRecord create(Integer capacity, Boolean filled, String name, ObjectSize objectSize) {
-        Validator.validateStringParam(name, "Не передано имя дома");
-        Validator.validateObjectParam(objectSize, "Не передан размер дома");
-        Validator.validateObjectParam(filled, "Не передан признак заполненности дома");
-        Validator.validateByCondition(capacity != null && capacity > 0, "Некорректное значение параметра вместимости дома");
+    public HouseRecord create(HouseCreateArgument houseCreateArgument) {
+        Validator.validateStringParam(houseCreateArgument.getName(), "Не передано имя дома");
+        Validator.validateStringParam(houseCreateArgument.getHouseKeeperId(), "Не передан ответственный сотрудник");
+        Validator.validateObjectParam(houseCreateArgument.getObjectSize(), "Не передан размер дома");
+        Validator.validateObjectParam(houseCreateArgument.getFilled(), "Не передан признак заполненности дома");
+        Validator.validateByCondition(houseCreateArgument.getCapacity() != null
+                                      && houseCreateArgument.getCapacity() > 0, "Некорректное значение параметра вместимости дома");
 
-        return houseRepository.create(capacity, filled, name, objectSize.name());
+        return houseRepository.create(houseCreateArgument);
     }
 
     @Override

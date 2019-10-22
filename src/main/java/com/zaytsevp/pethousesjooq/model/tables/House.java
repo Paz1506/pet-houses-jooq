@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class House extends TableImpl<HouseRecord> {
 
-    private static final long serialVersionUID = -1664730542;
+    private static final long serialVersionUID = 811923340;
 
     /**
      * The reference instance of <code>public.house</code>
@@ -84,6 +84,11 @@ public class House extends TableImpl<HouseRecord> {
      * The column <code>public.house.filled</code>.
      */
     public final TableField<HouseRecord, Boolean> FILLED = createField("filled", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>public.house.house_keeper_id</code>.
+     */
+    public final TableField<HouseRecord, String> HOUSE_KEEPER_ID = createField("house_keeper_id", org.jooq.impl.SQLDataType.VARCHAR(36).nullable(false), this, "");
 
     /**
      * Create a <code>public.house</code> table reference
@@ -148,6 +153,18 @@ public class House extends TableImpl<HouseRecord> {
     @Override
     public List<UniqueKey<HouseRecord>> getKeys() {
         return Arrays.<UniqueKey<HouseRecord>>asList(Keys.HOUSE_PKEY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<HouseRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<HouseRecord, ?>>asList(Keys.HOUSE__HOUSE_HOUSE_KEEPER_ID_FKEY);
+    }
+
+    public HouseKeeper houseKeeper() {
+        return new HouseKeeper(this, Keys.HOUSE__HOUSE_HOUSE_KEEPER_ID_FKEY);
     }
 
     /**

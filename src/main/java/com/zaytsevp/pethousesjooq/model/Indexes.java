@@ -5,6 +5,7 @@ package com.zaytsevp.pethousesjooq.model;
 
 
 import com.zaytsevp.pethousesjooq.model.tables.House;
+import com.zaytsevp.pethousesjooq.model.tables.HouseKeeper;
 
 import javax.annotation.Generated;
 
@@ -31,6 +32,7 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index HOUSE_PKEY = Indexes0.HOUSE_PKEY;
+    public static final Index HOUSE_KEEPER_PKEY = Indexes0.HOUSE_KEEPER_PKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -38,5 +40,6 @@ public class Indexes {
 
     private static class Indexes0 {
         public static Index HOUSE_PKEY = Internal.createIndex("house_pkey", House.HOUSE, new OrderField[] { House.HOUSE.ID }, true);
+        public static Index HOUSE_KEEPER_PKEY = Internal.createIndex("house_keeper_pkey", HouseKeeper.HOUSE_KEEPER, new OrderField[] { HouseKeeper.HOUSE_KEEPER.ID }, true);
     }
 }

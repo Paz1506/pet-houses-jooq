@@ -1,7 +1,9 @@
 package com.zaytsevp.pethousesjooq.repository;
 
+import com.zaytsevp.pethousesjooq.enums.EntityStatus;
 import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,16 +25,29 @@ class HouseRepositoryImplIT {
     private HouseRepository houseRepository;
 
     @Test
+    @Sql(value = "/datasets/repository/house/create.sql")
     void create() {
         // Act
-        HouseRecord actualResult = houseRepository.create(1, false, "one", "S");
+        String houseKeeperId = "00000000-0000-0000-0000-000000000777";
+
+        HouseCreateArgument createArgument = HouseCreateArgument.builder()
+                                                                .name("one")
+                                                                .filled(false)
+                                                                .capacity(1)
+                                                                .objectSize(ObjectSize.M.name())
+                                                                .houseKeeperId(houseKeeperId)
+                                                                .build();
+
+        HouseRecord actualResult = houseRepository.create(createArgument);
 
         // Assert
         Assertions.assertThat(actualResult).isNotNull();
         Assertions.assertThat(actualResult.getCapacity()).isEqualTo(1);
         Assertions.assertThat(actualResult.getFilled()).isFalse();
         Assertions.assertThat(actualResult.getName()).isEqualTo("one");
-        Assertions.assertThat(actualResult.getObjectSize()).isEqualTo("S");
+        Assertions.assertThat(actualResult.getStatus()).isEqualTo(EntityStatus.ACTIVE.name());
+        Assertions.assertThat(actualResult.getHouseKeeperId()).isEqualTo(houseKeeperId);
+        Assertions.assertThat(actualResult.getObjectSize()).isEqualTo(ObjectSize.M.name());
     }
 
     @Test

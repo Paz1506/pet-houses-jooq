@@ -1,7 +1,7 @@
 package com.zaytsevp.pethousesjooq.service;
 
-import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface HouseService {
 
-    HouseRecord create(Integer capacity, Boolean filled, String name, ObjectSize objectSize);
+    HouseRecord create(HouseCreateArgument houseCreateArgument);
 
     Optional<HouseRecord> getById(String id);
 
