@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class House extends TableImpl<HouseRecord> {
 
-    private static final long serialVersionUID = 1046021761;
+    private static final long serialVersionUID = -1664730542;
 
     /**
      * The reference instance of <code>public.house</code>
@@ -74,6 +74,11 @@ public class House extends TableImpl<HouseRecord> {
      * The column <code>public.house.object_size</code>.
      */
     public final TableField<HouseRecord, String> OBJECT_SIZE = createField("object_size", org.jooq.impl.SQLDataType.VARCHAR(5).nullable(false).defaultValue(org.jooq.impl.DSL.field("'XS'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "");
+
+    /**
+     * The column <code>public.house.status</code>.
+     */
+    public final TableField<HouseRecord, String> STATUS = createField("status", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'ACTIVE'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "");
 
     /**
      * The column <code>public.house.filled</code>.

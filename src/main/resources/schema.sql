@@ -5,5 +5,6 @@ id varchar (36) primary key,
 name varchar (255) not null,
 capacity integer not null,
 object_size varchar (5) not null default 'XS',
+status varchar not null default 'ACTIVE',
 filled boolean not null default false
 );

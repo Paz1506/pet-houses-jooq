@@ -72,7 +72,7 @@ public class HouseRepositoryImpl implements HouseRepository {
 
     /** получить поле мета класса JOOQ из строкового названия поля */
     private TableField getTableField(String sortFieldName) {
-        TableField sortField = null;
+        TableField sortField;
 
         try {
             // UpperCase (JOOQ field declaration specific)
