@@ -1,5 +1,6 @@
 package com.zaytsevp.pethousesjooq.service.argument;
 
+import com.zaytsevp.pethousesjooq.enums.EntityStatus;
 import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class HouseSearchArgument {
     private Integer capacityFrom;
 
     private Integer capacityTo;
+
+    private EntityStatus status;
 
     private String houseKeeperId;
 }
