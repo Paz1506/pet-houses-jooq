@@ -2,7 +2,9 @@ package com.zaytsevp.pethousesjooq.repository;
 
 import com.zaytsevp.pethousesjooq.enums.EntityStatus;
 import com.zaytsevp.pethousesjooq.model.tables.House;
+import com.zaytsevp.pethousesjooq.model.tables.HouseKeeper;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.projections.HouseWithKeeperProjection;
 import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import com.zaytsevp.pethousesjooq.util.WhereConditionBuilder;
@@ -26,6 +28,8 @@ public class HouseRepositoryImpl implements HouseRepository, BaseJOOQRepository<
     private final DSLContext dsl;
 
     private final House house = House.HOUSE;
+
+    private final HouseKeeper houseKeeper = HouseKeeper.HOUSE_KEEPER;
 
     @Autowired
     public HouseRepositoryImpl(DSLContext dsl) {this.dsl = dsl;}
@@ -70,5 +74,27 @@ public class HouseRepositoryImpl implements HouseRepository, BaseJOOQRepository<
                                             .fetchInto(HouseRecord.class);
 
         return new PageImpl<>(houseRecords);
+    }
+
+    @Override
+    public Optional<HouseWithKeeperProjection> getProjectionWithKeeperById(String id) {
+        return dsl.select()
+                  .from(house)
+                  .leftJoin(houseKeeper)
+                  .on(houseKeeper.ID.eq(house.HOUSE_KEEPER_ID))
+                  .where(house.ID.equal(id))
+                  .fetchOptional(record -> HouseWithKeeperProjection.builder()
+                                                                    .id(record.get(house.ID))
+                                                                    .capacity(record.get(house.CAPACITY))
+                                                                    .filled(record.get(house.FILLED))
+                                                                    .name(record.get(house.NAME))
+                                                                    .objectSize(record.get(house.OBJECT_SIZE))
+                                                                    .status(record.get(house.STATUS))
+                                                                    .houseKeeperId(record.get(houseKeeper.ID))
+                                                                    .houseKeeperAge(record.get(houseKeeper.AGE))
+                                                                    .houseKeeperFirstName(record.get(houseKeeper.FIRST_NAME))
+                                                                    .houseKeeperLastName(record.get(houseKeeper.LAST_NAME))
+                                                                    .houseKeeperLevel(record.get(houseKeeper.LEVEL))
+                                                                    .build());
     }
 }

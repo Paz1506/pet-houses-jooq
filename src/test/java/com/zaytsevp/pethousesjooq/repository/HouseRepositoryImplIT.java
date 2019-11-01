@@ -3,6 +3,7 @@ package com.zaytsevp.pethousesjooq.repository;
 import com.zaytsevp.pethousesjooq.enums.EntityStatus;
 import com.zaytsevp.pethousesjooq.enums.ObjectSize;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.projections.HouseWithKeeperProjection;
 import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import org.assertj.core.api.Assertions;
@@ -61,6 +62,26 @@ class HouseRepositoryImplIT {
         Assertions.assertThat(actualResult.get().getCapacity()).isEqualTo(1);
         Assertions.assertThat(actualResult.get().getName()).isEqualTo("House1");
         Assertions.assertThat(actualResult.get().getFilled()).isFalse();
+    }
+
+    @Test
+    void getProjectionWithKeeperById() {
+        // Act
+        Optional<HouseWithKeeperProjection> actualResult = houseRepository.getProjectionWithKeeperById("00000000-0000-0000-0000-000000000000");
+
+        // Assert
+        Assertions.assertThat(actualResult.isPresent()).isTrue();
+        Assertions.assertThat(actualResult.get().getId()).isEqualTo("00000000-0000-0000-0000-000000000000");
+        Assertions.assertThat(actualResult.get().getCapacity()).isEqualTo(1);
+        Assertions.assertThat(actualResult.get().getName()).isEqualTo("House1");
+        Assertions.assertThat(actualResult.get().getObjectSize()).isEqualTo(ObjectSize.S.name());
+        Assertions.assertThat(actualResult.get().getStatus()).isEqualTo(EntityStatus.ACTIVE.name());
+        Assertions.assertThat(actualResult.get().getFilled()).isFalse();
+        Assertions.assertThat(actualResult.get().getHouseKeeperAge()).isEqualTo(30);
+        Assertions.assertThat(actualResult.get().getHouseKeeperLevel()).isEqualTo(9);
+        Assertions.assertThat(actualResult.get().getHouseKeeperId()).isEqualTo("00000000-0000-0000-0000-000000000000");
+        Assertions.assertThat(actualResult.get().getHouseKeeperFirstName()).isEqualTo("John");
+        Assertions.assertThat(actualResult.get().getHouseKeeperLastName()).isEqualTo("Smith");
     }
 
     @Test

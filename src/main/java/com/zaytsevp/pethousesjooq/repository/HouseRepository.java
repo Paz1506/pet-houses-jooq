@@ -1,6 +1,7 @@
 package com.zaytsevp.pethousesjooq.repository;
 
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.projections.HouseWithKeeperProjection;
 import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,6 @@ public interface HouseRepository {
     Optional<HouseRecord> getById(String id);
 
     Page<HouseRecord> getAll(HouseSearchArgument houseSearchArgument, Pageable pageable);
+
+    Optional<HouseWithKeeperProjection> getProjectionWithKeeperById(String id);
 }

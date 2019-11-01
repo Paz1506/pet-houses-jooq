@@ -2,6 +2,7 @@ package com.zaytsevp.pethousesjooq.service;
 
 import com.zaytsevp.pethousesjooq.exceptions.RecordNotFoundException;
 import com.zaytsevp.pethousesjooq.model.tables.records.HouseRecord;
+import com.zaytsevp.pethousesjooq.projections.HouseWithKeeperProjection;
 import com.zaytsevp.pethousesjooq.repository.HouseRepository;
 import com.zaytsevp.pethousesjooq.service.argument.HouseCreateArgument;
 import com.zaytsevp.pethousesjooq.service.argument.HouseSearchArgument;
@@ -58,5 +59,19 @@ public class HouseServiceImpl implements HouseService {
     public List<HouseRecord> getAll(HouseSearchArgument searchArgument, Pageable pageable) {
         return houseRepository.getAll(searchArgument, pageable)
                               .getContent();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<HouseWithKeeperProjection> getProjectionWithKeeperById(String id) {
+        Validator.validateStringParam(id, "Не передан идентификатор дома");
+
+        return houseRepository.getProjectionWithKeeperById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public HouseWithKeeperProjection getExistingProjectionWithKeeperById(String id) {
+        return getProjectionWithKeeperById(id).orElseThrow(() -> new RecordNotFoundException("Record not found!"));
     }
 }
