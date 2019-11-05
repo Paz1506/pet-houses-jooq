@@ -16,10 +16,62 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <org.jooq.version>3.11.12</org.jooq.version>
+        <org.jooq.version>3.12.2</org.jooq.version>
         <org.mapstruct.version>1.3.0.Final</org.mapstruct.version>
         <org.lombok.version>1.18.10</org.lombok.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>h2db</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>currentprofile</name>
+                    <value>h2db</value>
+                </property>
+            </activation>
+            <properties>
+                <spring.properties.path>src/main/resources/application-h2db.properties</spring.properties.path>
+
+                <!-- JOOQ generator -->
+                <!--<jooq.generator.database>org.jooq.meta.h2.H2Database</jooq.generator.database>-->
+                <jooq.generator.database>org.jooq.meta.extensions.ddl.DDLDatabase</jooq.generator.database>
+                <jooq.generator.schema>PUBLIC</jooq.generator.schema>
+                <jooq.generator.script.location>src/main/resources/schema.sql</jooq.generator.script.location>
+                <jooq.generator.script.scriptskey>scripts</jooq.generator.script.scriptskey>
+
+                <!-- SQL Maven plugin-->
+                <sql.maven.phase>initialize</sql.maven.phase>
+                <sql.maven.goal>execute</sql.maven.goal>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>pgdb</id>
+            <activation>
+
+                <property>
+                    <name>currentprofile</name>
+                    <value>pgdb</value>
+                </property>
+            </activation>
+            <properties>
+                <spring.properties.path>src/main/resources/application-pgdb.properties</spring.properties.path>
+                <!-- JOOQ generator -->
+                <jooq.generator.database>org.jooq.meta.postgres.PostgresDatabase</jooq.generator.database>
+                <jooq.generator.schema>public</jooq.generator.schema>
+
+                <!-- Not for PG -->
+                <jooq.generator.script.location>dummy</jooq.generator.script.location>
+                <jooq.generator.script.scriptskey>dummy</jooq.generator.script.scriptskey>
+
+                <!-- SQL Maven plugin-->
+                <sql.maven.phase>initialize</sql.maven.phase>
+                <sql.maven.goal>execute</sql.maven.goal>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -38,6 +90,11 @@
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta-extensions</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
             <version>${org.jooq.version}</version>
         </dependency>
@@ -47,12 +104,21 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Databases -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.8</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -92,7 +158,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -105,7 +170,7 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>src/main/resources/config.properties</file>
+                                <file>${spring.properties.path}</file>
                             </files>
                         </configuration>
                     </execution>
@@ -118,19 +183,16 @@
                 <version>1.5</version>
                 <executions>
                     <execution>
-                        <phase>initialize</phase>
+                        <phase>${sql.maven.phase}</phase>
                         <goals>
-                            <goal>execute</goal>
+                            <goal>${sql.maven.goal}</goal>
                         </goals>
                         <configuration>
-                            <!--                            <driver>org.postgresql.Driver</driver>-->
-                            <!--                            <url>jdbc:postgresql://localhost:5432/pet-jooq</url>-->
-                            <!--                            <username>postgres</username>-->
-                            <!--                            <password>postgres</password>-->
-                            <driver>${db.driver}</driver>
-                            <url>${db.url}</url>
-                            <username>${db.username}</username>
-                            <password>${db.password}</password>
+                            <!-- read with properties plugin-->
+                            <driver>${jooq.driver.classname}</driver>
+                            <url>${spring.datasource.url}</url>
+                            <username>${spring.datasource.username}</username>
+                            <password>${spring.datasource.password}</password>
                             <srcFiles>
                                 <srcFile>src/main/resources/schema.sql</srcFile>
                             </srcFiles>
@@ -142,6 +204,11 @@
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
                         <version>42.2.8</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.4.199</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -162,19 +229,22 @@
                 <!--https://stackoverflow.com/questions/51226145/debugging-incorrect-configuration-of-jooq-code-generation-tool-->
                 <configuration>
                     <jdbc>
-                        <!--                                <driver>org.postgresql.Driver</driver>-->
-                        <!--                                <url>jdbc:postgresql://localhost:5432/pet-jooq</url>-->
-                        <!--                                <username>postgres</username>-->
-                        <!--                                <password>postgres</password>-->
-                        <driver>${db.driver}</driver>
-                        <url>${db.url}</url>
-                        <user>${db.username}</user>
-                        <password>${db.password}</password>
+                        <!-- read with properties plugin-->
+                        <driver>${jooq.driver.classname}</driver>
+                        <url>${spring.datasource.url}</url>
+                        <user>${spring.datasource.username}</user>
+                        <password>${spring.datasource.password}</password>
                     </jdbc>
                     <generator>
                         <database>
-                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                            <inputSchema>public</inputSchema>
+                            <name>${jooq.generator.database}</name>
+                            <inputSchema>${jooq.generator.schema}</inputSchema>
+                            <properties>
+                                <property>
+                                    <key>${jooq.generator.script.scriptskey}</key>
+                                    <value>${jooq.generator.script.location}</value>
+                                </property>
+                            </properties>
                         </database>
                         <target>
                             <packageName>com.zaytsevp.pethousesjooq.model</packageName>

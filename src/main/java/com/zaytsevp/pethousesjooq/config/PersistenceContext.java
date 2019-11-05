@@ -24,7 +24,6 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan({"com.zaytsevp.pethousesjooq.*"})
 @EnableTransactionManagement
-@PropertySource("classpath:config.properties")
 public class PersistenceContext {
 
     private final Environment environment;
@@ -36,9 +35,9 @@ public class PersistenceContext {
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
 
-        dataSource.setJdbcUrl(environment.getRequiredProperty("db.url"));
-        dataSource.setUsername(environment.getRequiredProperty("db.username"));
-        dataSource.setPassword(environment.getRequiredProperty("db.password"));
+        dataSource.setJdbcUrl(environment.getRequiredProperty("spring.datasource.url"));
+        dataSource.setUsername(environment.getRequiredProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getRequiredProperty("spring.datasource.password"));
 
         return dataSource;
     }
